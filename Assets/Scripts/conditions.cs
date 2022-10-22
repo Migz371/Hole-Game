@@ -22,10 +22,36 @@ public class conditions : MonoBehaviour
     public TextMeshProUGUI timetxtwin;
     public TextMeshProUGUI finalscorewin;
 
+    public GameObject winUI;
+    public GameObject loseUI;
+
+    public GameObject floatingtextprefab;
+
+    public AudioSource gameSoundEffect;
+    public AudioSource pointSoundEffects;
+
+    public MainMenu mainmenu; // call for difficulty number
+
+    public static int diff = 0;
     private void Start()
     {
+        if (diff == 0) //easy
+        {
+            startingTime = 400f;
+        }
+
+        if (diff == 1) //normal
+        {
+            startingTime = 200f;
+        }
+
+        if (diff == 2) //hard
+        {
+            startingTime = 130f;
+        }
+
         currentTime = startingTime;
-     
+        Time.timeScale = 1f;
     }
 
     private void Update()
@@ -40,15 +66,35 @@ public class conditions : MonoBehaviour
             
 
         currentTime -= 1 * Time.deltaTime;
-        //countdownText.text = currentTime.ToString("0"); //put time on text
+
 
         if (currentTime <= 0)
         {
+            gameSoundEffect.Stop();
+            loseUI.SetActive(true);
             currentTime = 0;
         }
 
-        Debug.Log(currentTime);
 
+
+        if (objectsremain == 0)
+        {
+            Win();
+        }
+
+
+
+
+    }
+
+    public void Win()
+    {
+        
+        gameSoundEffect.Stop();
+        winUI.SetActive(true);
+        Time.timeScale = 0f;
+        hole.GameIsPaused = true;
+        
     }
 
     private void Progress()
@@ -66,10 +112,20 @@ public class conditions : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        pointSoundEffects.Play();
+        showPoints();
         score += 10;
         objectsremain--;
-        //Debug.Log(objectsremain);
         Progress();
         Destroy(other.gameObject);
     }
+
+    void showPoints()
+    {
+        if (floatingtextprefab)
+        {
+            GameObject prefab = Instantiate(floatingtextprefab, hole.transform.position, Quaternion.identity); //spawns point when object eaten
+        }
+    }
+
 }

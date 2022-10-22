@@ -11,19 +11,22 @@ public class changePos : MonoBehaviour
     public Collider GroundCol;
     public float initialScale = 0.5f; // col size
     Mesh GeneratedMesh;
-    
-    
+
+
     Camera cam;
     Collider planecol;
     RaycastHit hit;
     Ray ray;
+
+    public bool GameIsPaused = false;
+    public GameObject pausemenu;
 
     public void Move(BaseEventData myEvent)
     {
         if (((PointerEventData)myEvent).pointerCurrentRaycast.isValid)
         {
             //transform.position = ((PointerEventData)myEvent).pointerCurrentRaycast.worldPosition; //------instantly moves hole to cursor?-------
-            transform.position = Vector3.MoveTowards(transform.position, ((PointerEventData)myEvent).pointerCurrentRaycast.worldPosition, Time.deltaTime * 4); // movement change number for speed
+            transform.position = Vector3.MoveTowards(transform.position, ((PointerEventData)myEvent).pointerCurrentRaycast.worldPosition, Time.deltaTime * 5); // movement change number for speed
         }
     }
 
@@ -59,7 +62,6 @@ public class changePos : MonoBehaviour
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
         planecol = GameObject.Find("Stage").GetComponent<Collider>();
 
-
     }
 
     private void Update()
@@ -78,7 +80,40 @@ public class changePos : MonoBehaviour
 
         // -------Can't hold left button??------
 
+
+
+        // --------- Pause --------- //
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (GameIsPaused)
+            {
+                Resume();
+            }else
+            {
+                Pause();
+            }
+        }
+
+
+
     }
+
+    public void Resume ()
+    {
+        pausemenu.SetActive(false);
+        Time.timeScale = 1f;
+        GameIsPaused = false;
+    }
+
+
+    void Pause()
+    {
+        pausemenu.SetActive(true);
+        Time.timeScale = 0f;
+        GameIsPaused = true;
+    }
+
+
     private void FixedUpdate()
     {
         if(transform.hasChanged == true)
