@@ -22,8 +22,22 @@ public class changePos : MonoBehaviour
     {
         if (((PointerEventData)myEvent).pointerCurrentRaycast.isValid)
         {
-            //transform.position = ((PointerEventData)myEvent).pointerCurrentRaycast.worldPosition;
+            //transform.position = ((PointerEventData)myEvent).pointerCurrentRaycast.worldPosition; //------instantly moves hole to cursor?-------
             transform.position = Vector3.MoveTowards(transform.position, ((PointerEventData)myEvent).pointerCurrentRaycast.worldPosition, Time.deltaTime * 4); // movement change number for speed
+        }
+    }
+
+    public IEnumerator HoleGrow()
+    {
+        Vector3 StartScale = transform.localScale;
+        Vector3 EndsScale = StartScale * 1.1f;
+
+        float t = 0;
+        while (t <= 0.4f)
+        {
+            t += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(StartScale, EndsScale, t);
+            yield return null;
         }
     }
 
@@ -62,6 +76,8 @@ public class changePos : MonoBehaviour
         //    }
         //}
 
+        // -------Can't hold left button??------
+
     }
     private void FixedUpdate()
     {
@@ -74,8 +90,6 @@ public class changePos : MonoBehaviour
             Make3DMeshCol();
 
         }
-
-   
 
     }
 
