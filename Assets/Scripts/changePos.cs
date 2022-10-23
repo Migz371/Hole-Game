@@ -11,11 +11,8 @@ public class changePos : MonoBehaviour
     public Collider GroundCol;
     public float initialScale = 0.5f; // col size
     Mesh GeneratedMesh;
-    public Transform holemask;
-    public Vector3 offset;
 
     Camera cam;
-    Collider planecol;
     RaycastHit hit;
     Ray ray;
     Vector3 clickPos;
@@ -54,15 +51,11 @@ public class changePos : MonoBehaviour
           }
 
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-        planecol = GameObject.Find("Hills").GetComponent<Collider>();
-        //planecol = GameObject.FindGameObjectsWithTag("Barrier")(;
 
     }
 
     private void Update()
     {
-
-       // holemask.position = transform.position + offset;
 
         if (Input.GetMouseButton(0))
         {
@@ -71,18 +64,11 @@ public class changePos : MonoBehaviour
             ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.collider != planecol)
                     transform.position = Vector3.MoveTowards(transform.position, clickPos, Time.deltaTime * 5);
             }
 
             
         }
-
-
-
-        // -------Can't hold left button??------
-
-
 
 
         // --------- Pause --------- //
@@ -154,17 +140,6 @@ public class changePos : MonoBehaviour
 
     }
 
-    //private void OnTriggerEnter(Collider other) // turn off col between ground and objects
-    //{
-    //    Physics.IgnoreCollision(other,GroundCol, true);
-    //    Physics.IgnoreCollision(other, GeneratedMeshCol, false);
 
-    //}
-
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    Physics.IgnoreCollision(other, GroundCol, false);
-    //    Physics.IgnoreCollision(other, GeneratedMeshCol, true);
-    //}
 
 }
