@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Barrier
+  - Object
   layers:
   - Default
   - TransparentFX
@@ -17,9 +18,9 @@ TagManager:
   - Objects
   - ShaderHole
   - ShaderHoleMask
-  - 
-  - 
-  - 
+  - Barrier
+  - ObjectNormal
+  - Player
   - 
   - 
   - 

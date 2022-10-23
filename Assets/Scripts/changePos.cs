@@ -11,24 +11,17 @@ public class changePos : MonoBehaviour
     public Collider GroundCol;
     public float initialScale = 0.5f; // col size
     Mesh GeneratedMesh;
-
+    public Transform holemask;
+    public Vector3 offset;
 
     Camera cam;
     Collider planecol;
     RaycastHit hit;
     Ray ray;
+    Vector3 clickPos;
 
     public bool GameIsPaused = false;
     public GameObject pausemenu;
-
-    public void Move(BaseEventData myEvent)
-    {
-        if (((PointerEventData)myEvent).pointerCurrentRaycast.isValid)
-        {
-            //transform.position = ((PointerEventData)myEvent).pointerCurrentRaycast.worldPosition; //------instantly moves hole to cursor?-------
-            transform.position = Vector3.MoveTowards(transform.position, ((PointerEventData)myEvent).pointerCurrentRaycast.worldPosition, Time.deltaTime * 5); // movement change number for speed
-        }
-    }
 
     public IEnumerator HoleGrow()
     {
@@ -55,30 +48,40 @@ public class changePos : MonoBehaviour
         {
             if (gameobj.layer == LayerMask.NameToLayer("Objects"))
             {
-                Physics.IgnoreCollision(gameobj.GetComponent<Collider>(), GeneratedMeshCol, true);
+                Physics.IgnoreLayerCollision(7,9,true);
+                //Physics.IgnoreCollision(gameobj.GetComponent<Collider>(), GeneratedMeshCol, true); // will ignore any collider except stage
             }
           }
 
         cam = GameObject.Find("Main Camera").GetComponent<Camera>();
-        planecol = GameObject.Find("Stage").GetComponent<Collider>();
+        planecol = GameObject.Find("Hills").GetComponent<Collider>();
+        //planecol = GameObject.FindGameObjectsWithTag("Barrier")(;
 
     }
 
     private void Update()
     {
-        //transform.position = cam.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 5));
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Debug.Log("working");
-        //    ray = cam.ScreenPointToRay(Input.mousePosition);
-        //    if (Physics.Raycast(ray, out hit))
-        //    {
-        //        if (hit.collider == planecol)
-        //            transform.position = Vector3.MoveTowards(transform.position, hit.point, Time.deltaTime * 2);
-        //    }
-        //}
+
+       // holemask.position = transform.position + offset;
+
+        if (Input.GetMouseButton(0))
+        {
+            clickPos = hit.point;
+            clickPos.y = 0;
+            ray = cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider != planecol)
+                    transform.position = Vector3.MoveTowards(transform.position, clickPos, Time.deltaTime * 5);
+            }
+
+            
+        }
+
+
 
         // -------Can't hold left button??------
+
 
 
 
@@ -151,16 +154,17 @@ public class changePos : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter(Collider other) // turn off col between ground and objects
-    {
-        Physics.IgnoreCollision(other,GroundCol, true);
-        Physics.IgnoreCollision(other, GeneratedMeshCol, false); 
-    }
+    //private void OnTriggerEnter(Collider other) // turn off col between ground and objects
+    //{
+    //    Physics.IgnoreCollision(other,GroundCol, true);
+    //    Physics.IgnoreCollision(other, GeneratedMeshCol, false);
 
-    private void OnTriggerExit(Collider other)
-    {
-        Physics.IgnoreCollision(other, GroundCol, false);
-        Physics.IgnoreCollision(other, GeneratedMeshCol, true);
-    }
+    //}
+
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    Physics.IgnoreCollision(other, GroundCol, false);
+    //    Physics.IgnoreCollision(other, GeneratedMeshCol, true);
+    //}
 
 }
